@@ -23,6 +23,10 @@ using namespace std;
 
 enum months {January = 1, February, March, April, May, June , July, 
             August, September, October, November, December};
+enum bandType {LongPeriod = 1, ShortPeriod, Broadband};
+enum InstrumentType {HighGain, LowGain, Accelerometer};
+enum magnitude_type {ML, Ms, Mb, Mw};
+enum network_code {CE, CI, FA, NP, WR};
 
 string Band[3] = {"Long-Period", "Short-Period", "Broadband"};
 string Instrument[3] = {"High-Gain", "Low-Gain", "Accelerometer"};
@@ -183,6 +187,7 @@ bool IsBand(string bandName) {
 }
 
 
+
 // Check instrument type and name 
 bool IsInstrument(string instrumentName) {
 
@@ -251,19 +256,18 @@ void printHeader (int EntryNumber, string EQID, string day, string monthNmae, st
 }
 
 // Print to File 
-void printToFile(string EQID, int EntryNUmber, string NCode, string stationName, 
-                string instrumentName, string bandName, string orName) {
+void printToFile(string array[300], int totalSignal) {
     
     ofstream outputFile;
     string outputFileName = "sabber.out" ;
-    if (EntryNUmber > 0)
-       outputFile.open(outputFileName.c_str(), ofstream::out | ofstream::app);
-    else
-       outputFile.open(outputFileName.c_str()); 
+    
+    outputFile.open(outputFileName.c_str(), ofstream::out | ofstream::app);
 
-    for (int unsigned i = 0 ; i < orName.length(); i++) {
-       outputFile << EQID << "." << NCode << "."   << stationName << "." << uppercase(bandName)
-                  << uppercase(instrumentName) << orName[i]   << endl;
+    outputFile << totalSignal;
+    outputFile << endl;
+
+    for (int unsigned i = 0 ; i < 300; i++) { 
+        if (array[i].length() > 1) outputFile << array[i] << endl;;
 
     }
 }
@@ -315,7 +319,6 @@ void printError(int EntryNUmber, int validEntries, int invalidEntries, int total
 
 }
 
-
 // Main function 
 int main() {
 
@@ -325,6 +328,8 @@ int main() {
     cout << "starts reading ...." <<endl;
     outputErrorFile << "starts reading ...." <<endl;
     outputErrorFile.close();
+    string array[300];
+    for (int i =0; i< 300; i++) array[i] = "E" ;
 
     //================== starts reading ====================
     int EntryNumber = 0;
@@ -446,10 +451,17 @@ int main() {
         else e = false;
         
         if ((a) && (b) && (c) && (d) && (e)) {
-           printToFile(head.EQID, EntryNumber, signal.NCode, signal.stationName, 
-                       signal.instrumentName, signal.bandName, signal.orName);
+           
+            string or_1 = signal.orName; 
+            for (int i = 0 ; i < or_1.length(); i++) {
+
+                array[totalSignal] = head.EQID + "." + signal.NCode + "." + signal.stationName + "." + uppercase(signal.bandName)
+                           + uppercase(signal.instrumentName) + or_1[i] ;
+                totalSignal += 1;
+
+            }
+           
            validEntries ++;
-           totalSignal += signal.orName.length();
         }
         else {
             printError(EntryNumber, validEntries, invalidEntries, totalSignal, 
@@ -462,6 +474,8 @@ int main() {
 
     }
     
+    printToFile(array, totalSignal);
+
     outputErrorFile.open(outputFileName.c_str(), ofstream::out | ofstream::app);
     outputErrorFile << "validEntries = "   << validEntries   << endl;
     outputErrorFile << "invalidEntries = " << invalidEntries << endl;
