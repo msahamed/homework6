@@ -52,6 +52,8 @@ struct signalInfo {
     string bandName;
     string instrumentName;
     string orName;
+    string bandInitial;
+    string instInitial;
 
 };
 
@@ -216,14 +218,14 @@ bandType str2bandName(string bandName){
 }
 
 // Check bancd name 
-bool IsBand(string bandName) {
+bool IsBand(string bandName, string& bandInitial) {
     bool band = false;
     bandType bandName1 = str2bandName(uppercase(bandName));
 
     switch (bandName1) {
-        case LongPeriod : { band = true ; return true; }
-        case ShortPeriod : { band = true ; return true; }
-        case Broadband : { band = true ; return true; }
+        case LongPeriod : { band = true ; bandInitial = "L"; return true; }
+        case ShortPeriod : { band = true ; bandInitial = "B"; return true; }
+        case Broadband : { band = true ; bandInitial = "H"; return true; }
     }
     return band;
 }
@@ -238,15 +240,15 @@ InstrumentType str2InstrumentType (string instrumentName) {
 }
 
 // Check instrument type and name 
-bool IsInstrument(string instrumentName) {
+bool IsInstrument(string instrumentName, string& instInitial) {
 
     bool isint = false;
     InstrumentType instrumentName1 = str2InstrumentType(uppercase(instrumentName));
     
     switch (instrumentName1) {
-        case HighGain : { isint = true ; return true; }
-        case LowGain : { isint = true ; return true; }
-        case Accelerometer : { isint = true ; return true; }
+        case HighGain : { isint = true ; instInitial= "H"; return true; }
+        case LowGain : { isint = true ; instInitial= "L"; return true; }
+        case Accelerometer : { isint = true ; instInitial= "N"; return true; }
     }
     return isint;
 }
@@ -481,14 +483,14 @@ int main() {
         }
         else b = false;
 
-        if (IsBand(signal.bandName)) {
-            signal.bandName = signal.bandName[0];
+        if (IsBand(signal.bandName, signal.bandInitial)) {
+            signal.bandName = signal.bandInitial;
             c = true;
         }
         else c = false;
 
-        if (IsInstrument(signal.instrumentName)) {
-            signal.instrumentName = signal.instrumentName[0];
+        if (IsInstrument(signal.instrumentName , signal.instInitial)) {
+            signal.instrumentName = signal.instInitial;
             d = true;
         }
         else d = false;
