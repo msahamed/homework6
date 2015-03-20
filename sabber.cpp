@@ -23,13 +23,10 @@ using namespace std;
 
 enum months {January = 1, February, March, April, May, June , July, 
             August, September, October, November, December};
-enum bandType {LongPeriod = 1, ShortPeriod, Broadband};
+enum bandType {LongPeriod, ShortPeriod, Broadband};
 enum InstrumentType {HighGain, LowGain, Accelerometer};
-enum magnitude_type {ML, Ms, Mb, Mw};
-enum network_code {CE, CI, FA, NP, WR};
-
-string Band[3] = {"Long-Period", "Short-Period", "Broadband"};
-string Instrument[3] = {"High-Gain", "Low-Gain", "Accelerometer"};
+enum magnitudeType {ML, Ms, Mb, Mw};
+enum networkCode {CE, CI, FA, NP, WR};
 
 struct header {
 
@@ -117,6 +114,13 @@ bool IsTime (string time, string timeZone) {
     return true;
 }
 
+magnitudeType strToMagnitude(string magType) {
+
+    if (magType == "ML") return ML;   
+    else if (magType == "MS") return Ms;
+    else if (magType == "MB") return Mb;
+    else if (magType == "MW") return Mw;
+}
 
 // Check magnitude type AND magnitude value
 bool IsMagnitude(string& magType, string magnitude) {
@@ -125,28 +129,59 @@ bool IsMagnitude(string& magType, string magnitude) {
    bool mag;
    istringstream(magnitude) >> number;
    if (number < 0) return false;
-   
-   string magtype1 = uppercase(magType);
 
-   if      ( magtype1== uppercase("ML")) { mag = true; magType = "ML" ; }
-   else if (magtype1 == uppercase("Ms")) { mag = true; magType = "Ms" ; }
-   else if (magtype1 == uppercase("Mb")) { mag = true; magType = "Mb" ; }
-   else if (magtype1 == uppercase("Mw")) { mag = true; magType = "Mw" ; }
-   else return false;
+    magnitudeType mag1;
+    mag1 = strToMagnitude(uppercase(magType));
 
-   return mag;
+    switch (mag1) {
+        case ML :
+            { mag = true; magType = "ML" ; break;}
+        case Ms :
+            { mag = true; magType = "Ms" ;  break;}
+        case Mb :
+            { mag = true; magType = "Mb" ;  break;}
+        case Mw : 
+            { mag = true; magType = "Mw" ; break;}
+        default :
+             return false;
+    }
+
+    return mag;
+}
+
+
+networkCode str2Ncode(string NCode){
+
+    if (NCode == "CI") return CI;   
+    else if (NCode == "CE") return CE;
+    else if (NCode == "FA") return FA;
+    else if (NCode == "NP") return NP;
+    else if (NCode == "WR") return WR;
+
 }
 
 
 // Check the Network Code
 bool IsNCode(string NCode) {
 
-    if (NCode.compare("CI") == 0) return true;
-    else if (NCode.compare("CE") == 0) return true;
-    else if (NCode.compare("FA") == 0) return true;
-    else if (NCode.compare("NP") == 0) return true;
-    else if (NCode.compare("WR") == 0) return true;
-    else return false;
+
+    networkCode NCode1 = str2Ncode(uppercase(NCode));
+
+    switch (NCode1) {
+        case CI :
+            { return true; break;}
+        case CE :
+            { return true; break;}
+        case FA :
+            { return true; break;}
+        case NP : 
+            { return true; break;}
+        case WR :
+            { return true; break;}
+        default :
+             return false;
+    }
+
 }
 
 
@@ -173,31 +208,45 @@ bool IsStation(string stationName) {
     return rightStation;
 }
 
+bandType str2bandName(string bandName){
+
+    if (bandName == uppercase("Long-Period")) return LongPeriod;   
+    else if (bandName == uppercase("Short-Period")) return ShortPeriod;
+    else if (bandName == uppercase("Broadband")) return Broadband;
+}
+
 // Check bancd name 
 bool IsBand(string bandName) {
     bool band = false;
-    for (int i = 0; i < 3; i++) {
+    bandType bandName1 = str2bandName(uppercase(bandName));
 
-        if (uppercase(Band[i]) == uppercase(bandName)) {
-            band = true;
-            return true;
-        }
+    switch (bandName1) {
+        case LongPeriod : { band = true ; return true; }
+        case ShortPeriod : { band = true ; return true; }
+        case Broadband : { band = true ; return true; }
     }
     return band;
 }
 
 
+InstrumentType str2InstrumentType (string instrumentName) {
+
+    if (instrumentName == uppercase("High-Gain")) return HighGain;   
+    else if (instrumentName == uppercase("Low-Gain")) return LowGain;
+    else if (instrumentName == uppercase("Accelerometer")) return Accelerometer;
+
+}
 
 // Check instrument type and name 
 bool IsInstrument(string instrumentName) {
 
     bool isint = false;
-    for (int i = 0; i < 3; i++){
-
-        if (uppercase(Instrument[i]) == uppercase(instrumentName)) {
-            isint = true;
-            return true;
-        }
+    InstrumentType instrumentName1 = str2InstrumentType(uppercase(instrumentName));
+    
+    switch (instrumentName1) {
+        case HighGain : { isint = true ; return true; }
+        case LowGain : { isint = true ; return true; }
+        case Accelerometer : { isint = true ; return true; }
     }
     return isint;
 }
@@ -455,8 +504,8 @@ int main() {
             string or_1 = signal.orName; 
             for (int i = 0 ; i < or_1.length(); i++) {
 
-                array[totalSignal] = head.EQID + "." + signal.NCode + "." + signal.stationName + "." + uppercase(signal.bandName)
-                           + uppercase(signal.instrumentName) + or_1[i] ;
+                array[totalSignal] = head.EQID + "." + signal.NCode + "." + signal.stationName + "." 
+                                     + uppercase(signal.bandName) + uppercase(signal.instrumentName) + or_1[i] ;
                 totalSignal += 1;
 
             }
