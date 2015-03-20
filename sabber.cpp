@@ -1,10 +1,10 @@
 
 /* 
 *   Sabber Ahamed
-*   Homework -5
+*   Homework - 6
 *   Programming tools for Eanginners and scientists
 *   Spring 2015
-*   Github link : https://github.com/msahamed/homework5
+*   Github link : https://github.com/msahamed/homework6
 */
 
 
@@ -19,29 +19,27 @@
 
 using namespace std;
 
-
-
-enum months {January = 1, February, March, April, May, June , July, 
-            August, September, October, November, December};
-enum bandType {LongPeriod, ShortPeriod, Broadband};
-enum InstrumentType {HighGain, LowGain, Accelerometer};
-enum magnitudeType {ML, Ms, Mb, Mw};
-enum networkCode {CE, CI, FA, NP, WR};
+enum months { January = 1, February, March, April, May, June , July, 
+            August, September, October, November, December };
+enum bandType { LongPeriod, ShortPeriod, Broadband };
+enum InstrumentType { HighGain, LowGain, Accelerometer };
+enum magnitudeType { ML, Ms, Mb, Mw };
+enum networkCode { CE, CI, FA, NP, WR};
 
 struct header {
 
-string EQID;
-string date;
-string day;
-string year;
-string time;
-string timeZone;
-string earthquakeName;
-string lat;
-string lon;
-string magType;
-string magnitude;
-string Enumber;
+    string EQID;
+    string date;
+    string day;
+    string year;
+    string time;
+    string timeZone;
+    string earthquakeName;
+    string lat;
+    string lon;
+    string magType;
+    string magnitude;
+    string Enumber;
 
 };
 
@@ -59,10 +57,12 @@ struct signalInfo {
 
 
 string uppercase (string s) {
+
     string result = s;
     for (int i=0; i < (int)result.size(); i++)
         result[i] = toupper(result[i]);
     return result;
+
 }
 
 
@@ -94,6 +94,7 @@ bool IsDate(string date1, string& day1, string& monthNmae, string& year1) {
     else return false;
 
     return true;
+
 }
 
 
@@ -114,6 +115,7 @@ bool IsTime (string time, string timeZone) {
     if (isdigit(ss[0]) == 0 || isdigit(ss[1]) == 0 ) return false;
 
     return true;
+
 }
 
 magnitudeType strToMagnitude(string magType) {
@@ -122,6 +124,7 @@ magnitudeType strToMagnitude(string magType) {
     else if (magType == "MS") return Ms;
     else if (magType == "MB") return Mb;
     else if (magType == "MW") return Mw;
+
 }
 
 // Check magnitude type AND magnitude value
@@ -145,20 +148,21 @@ bool IsMagnitude(string& magType, string magnitude) {
         case Mw : 
             { mag = true; magType = "Mw" ; break;}
         default :
-             return false;
+            return false;
     }
 
     return mag;
+
 }
 
 
-networkCode str2Ncode(string NCode){
+networkCode str2Ncode(string NCode) {
 
-    if (NCode == "CI") return CI;   
-    else if (NCode == "CE") return CE;
-    else if (NCode == "FA") return FA;
-    else if (NCode == "NP") return NP;
-    else if (NCode == "WR") return WR;
+    if (NCode == uppercase("CI")) return CI;   
+    else if (NCode == uppercase("CE")) return CE;
+    else if (NCode == uppercase("FA")) return FA;
+    else if (NCode == uppercase("NP")) return NP;
+    else if (NCode == uppercase("WR")) return WR;
 
 }
 
@@ -166,8 +170,7 @@ networkCode str2Ncode(string NCode){
 // Check the Network Code
 bool IsNCode(string NCode) {
 
-
-    networkCode NCode1 = str2Ncode(uppercase(NCode));
+    networkCode NCode1 = str2Ncode(NCode);
 
     switch (NCode1) {
         case CI :
@@ -210,7 +213,7 @@ bool IsStation(string stationName) {
     return rightStation;
 }
 
-bandType str2bandName(string bandName){
+bandType str2bandName(string bandName) {
 
     if (bandName == uppercase("Long-Period")) return LongPeriod;   
     else if (bandName == uppercase("Short-Period")) return ShortPeriod;
@@ -283,7 +286,6 @@ void open_input(ifstream& inputFile, string inputFileName) {
 
     if (inputFile.fail()) {
         cout << "Error reading the file  " << inputFileName << endl;
-        //generateError(1 , inputFileName);
         exit(EXIT_FAILURE);
     }
 }
@@ -540,130 +542,4 @@ int main() {
     cout << "Finished" << endl;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
